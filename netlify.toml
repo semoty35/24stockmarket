@@ -16,3 +16,18 @@
   from = "/api/usd-krw"
   to = "/.netlify/functions/usd-krw"
   status = 200
+
+[[redirects]]
+  from = "/api/adr"
+  to = "/.netlify/functions/adr"
+  status = 200
+
+[[redirects]]
+  from = "/api/news"
+  to = "/.netlify/functions/news"
+  status = 200
+
+[[redirects]]
+  from = "/api/stock-news"
+  to = "/.netlify/functions/stock-news"
+  status = 200

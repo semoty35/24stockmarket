@@ -32,6 +32,7 @@ const MAX_HIST     = 30;
 //  STATE MANAGEMENT
 // ────────────────────────────────────────────────
 let usdKrw = null;
+let krxHynixPrice = null;
 const prevBnf = {}, prevHl = {};
 const bnfPx = {}, hlPx = {};
 const priceHistory = {};
@@ -499,6 +500,38 @@ async function refreshAll() {
     }
   }));
 
+  // 3. Fetch SK Hynix ADR Price from backend
+  try {
+    const res = await fetch('/api/adr');
+    const json = await res.json();
+    if (json.ok) {
+      const adrPriceUsd = json.price;
+      const adrChangePct = json.changePct;
+      
+      const adrEl = document.getElementById('krxHynixAdr');
+      if (adrEl) {
+        const basePrice = krxHynixPrice || (bnfPx['SKHYNIX'] ? bnfPx['SKHYNIX'] * (usdKrw || 1350) : null);
+        const changeSign = adrChangePct > 0 ? '+' : '';
+        const changeText = `${changeSign}${adrChangePct.toFixed(1)}%`;
+        
+        if (basePrice) {
+          const adrKrw = adrPriceUsd * 10 * (usdKrw || 1350);
+          const diffKrw = adrKrw - basePrice;
+          const premiumPct = (diffKrw / basePrice) * 100;
+          const premiumSign = premiumPct > 0 ? '+' : '';
+          
+          adrEl.textContent = `ADR: $${fmt(adrPriceUsd, 2)} (${changeText}) · 괴리율: ${premiumSign}${premiumPct.toFixed(1)}%`;
+          adrEl.style.color = premiumPct > 0 ? 'var(--color-up-krx)' : (premiumPct < 0 ? 'var(--color-down-krx)' : 'var(--text-secondary)');
+        } else {
+          adrEl.textContent = `ADR: $${fmt(adrPriceUsd, 2)} (${changeText})`;
+          adrEl.style.color = '#3b82f6';
+        }
+      }
+    }
+  } catch (e) {
+    console.error('Error fetching ADR price:', e.message);
+  }
+
   const lastUpdateEl = document.getElementById('lastUpdate');
   if (lastUpdateEl) {
     const timeStr = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -521,6 +554,8 @@ async function loadKRX() {
     if (!json.ok) throw new Error(json.error);
 
     const stocks = json.data;
+    const hynixStock = stocks.find(s => s.symbol === '000660.KS');
+    if (hynixStock) krxHynixPrice = hynixStock.price;
     const isOpen = stocks.some(s => s.state === 'REGULAR');
 
     status.className = 'krx-status ' + (isOpen ? 'open' : 'closed');
@@ -537,6 +572,9 @@ async function loadKRX() {
         : '—';
       const ticker = s.symbol.replace('.KS', '');
 
+      const adrHtml = s.symbol === '000660.KS'
+        ? `<span class="krx-adr" id="krxHynixAdr">ADR: $— (—)</span>`
+        : '';
       return `
         <div class="krx-item" onclick="openKRXChart('${s.symbol}','${s.name}')">
           <div class="krx-item-left">
@@ -546,6 +584,7 @@ async function loadKRX() {
           <div class="krx-item-right">
             <span class="krx-price ${priceClass}">₩${s.price.toLocaleString('ko-KR')}</span>
             <span class="krx-change ${chgClass}">${chgStr}</span>
+            ${adrHtml}
             <span class="krx-vol">거래량 ${fmtKRXVol(s.volume)}</span>
           </div>
         </div>`;
@@ -945,12 +984,10 @@ async function loadStockNews(symbol) {
   if (!listEl) return;
 
   try {
-    const query = STOCK_NEWS_QUERY[symbol] || symbol;
-    const rssUrl = encodeURIComponent(`https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko&tbs=qdr:w`);
-    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rssUrl}`);
+    const res = await fetch(`/api/stock-news?symbol=${symbol}`);
     const data = await res.json();
 
-    if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
+    if (!data.ok || !data.items?.length) throw new Error('No items');
 
     const now = Date.now();
     const maxAge = 7 * 24 * 60 * 60 * 1000;
@@ -997,11 +1034,10 @@ async function loadNews() {
   listEl.innerHTML = '<div class="news-loading"><div class="spinner"></div> 증시 속보 수집 중...</div>';
 
   try {
-    const rss = encodeURIComponent('https://news.google.com/rss/search?q=코스피+증시+삼성전자+SK하이닉스&hl=ko&gl=KR&ceid=KR:ko&tbs=qdr:w');
-    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${rss}`);
+    const res = await fetch('/api/news');
     const data = await res.json();
 
-    if (data.status !== 'ok' || !data.items?.length) throw new Error('No items');
+    if (!data.ok || !data.items?.length) throw new Error('No items');
 
     const now = Date.now();
     const maxAge = 7 * 24 * 60 * 60 * 1000;

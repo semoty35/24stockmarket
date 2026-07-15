@@ -13,6 +13,31 @@ const STOCK_NAMES = {
   '000660.KS': { name: 'SK하이닉스', nameEn: 'SK Hynix' }
 };
 
+function parseGoogleNewsRss(xmlText) {
+  const items = [];
+  const itemRegex = /<item>([\s\S]*?)<\/item>/g;
+  let match;
+  
+  while ((match = itemRegex.exec(xmlText)) !== null) {
+    const itemContent = match[1];
+    
+    const titleMatch = itemContent.match(/<title>([\s\S]*?)<\/title>/);
+    const linkMatch = itemContent.match(/<link>([\s\S]*?)<\/link>/);
+    const pubDateMatch = itemContent.match(/<pubDate>([\s\S]*?)<\/pubDate>/);
+    const sourceMatch = itemContent.match(/<source[^>]*>([\s\S]*?)<\/source>/);
+    
+    if (titleMatch && linkMatch) {
+      items.push({
+        title: titleMatch[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').trim(),
+        link: linkMatch[1].trim(),
+        pubDate: pubDateMatch ? pubDateMatch[1].trim() : '',
+        author: sourceMatch ? sourceMatch[1].replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1').trim() : '언론사'
+      });
+    }
+  }
+  return items;
+}
+
 // MIME Types map
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -192,6 +217,99 @@ const server = http.createServer(async (req, res) => {
       console.error('Error in /api/usd-krw proxy:', error.message);
       res.writeHead(200, { 'Content-Type': 'application/json' });
       res.end(JSON.stringify({ ok: true, rate: 1350, fallback: true }));
+    }
+    return;
+  }
+
+  // 3b. API: SK Hynix ADR Price (SKHY)
+  if (pathname === '/api/adr' && req.method === 'GET') {
+    try {
+      const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/SKHY?interval=1d&range=1d`;
+      const response = await fetch(yahooUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+      
+      if (!response.ok) throw new Error(`Yahoo HTTP ${response.status}`);
+      const json = await response.json();
+      const meta = json.chart?.result?.[0]?.meta;
+      if (!meta) throw new Error('No metadata for SKHY');
+      
+      const price = meta.regularMarketPrice;
+      const prev = meta.chartPreviousClose || price;
+      const change = price - prev;
+      const changePct = prev !== 0 ? (change / prev) * 100 : 0;
+      
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, price, prev, change, changePct }));
+    } catch (error) {
+      console.error('Error in /api/adr proxy:', error.message);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: error.message }));
+    }
+    return;
+  }
+
+  // 3c. API: Global KOSPI News
+  if (pathname === '/api/news' && req.method === 'GET') {
+    try {
+      const query = '코스피 증시 삼성전자 SK하이닉스';
+      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko&tbs=qdr:w`;
+      
+      const response = await fetch(rssUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+      
+      if (!response.ok) throw new Error(`Google News HTTP ${response.status}`);
+      const xml = await response.text();
+      const items = parseGoogleNewsRss(xml).slice(0, 10);
+      
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ ok: true, items }));
+    } catch (error) {
+      console.error('Error in /api/news proxy:', error.message);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: error.message }));
+    }
+    return;
+  }
+
+  // 3d. API: Stock-Specific News
+  if (pathname === '/api/stock-news' && req.method === 'GET') {
+    try {
+      const symbol = parsedUrl.query.symbol;
+      if (!symbol) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ ok: false, error: 'Symbol is required' }));
+        return;
+      }
+      
+      const STOCK_NEWS_QUERY = {
+        SAMSUNG: '삼성전자 주가 KOSPI',
+        SKHYNIX: 'SK하이닉스 반도체 주가'
+      };
+      const query = STOCK_NEWS_QUERY[symbol] || symbol;
+      const rssUrl = `https://news.google.com/rss/search?q=${encodeURIComponent(query)}&hl=ko&gl=KR&ceid=KR:ko&tbs=qdr:w`;
+      
+      const response = await fetch(rssUrl, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+        }
+      });
+      
+      if (!response.ok) throw new Error(`Google News HTTP ${response.status}`);
+      const xml = await response.text();
+      const items = parseGoogleNewsRss(xml);
+      
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ ok: true, items }));
+    } catch (error) {
+      console.error('Error in /api/stock-news proxy:', error.message);
+      res.writeHead(500, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: false, error: error.message }));
     }
     return;
   }

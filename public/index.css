@@ -310,6 +310,12 @@ header {
 .krx-change.down { color: var(--color-down-krx); }
 .krx-change.flat { color: var(--text-secondary); }
 
+.krx-adr {
+  font-size: 9px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
 .krx-vol {
   font-size: 8px;
   color: var(--text-tertiary);
