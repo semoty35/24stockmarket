@@ -1,0 +1,14 @@
+{
+  "name": "korean-stocks-defi",
+  "version": "1.0.0",
+  "description": "Korean Stocks DeFi tracking app for Samsung and SK Hynix",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "cors": "^2.8.5"
+  }
+}

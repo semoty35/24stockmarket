@@ -1,0 +1,18 @@
+[build]
+  publish = "public"
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/api/krx"
+  to = "/.netlify/functions/krx"
+  status = 200
+
+[[redirects]]
+  from = "/api/krx-candles"
+  to = "/.netlify/functions/krx-candles"
+  status = 200
+
+[[redirects]]
+  from = "/api/usd-krw"
+  to = "/.netlify/functions/usd-krw"
+  status = 200

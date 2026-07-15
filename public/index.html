@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국주식 24 | 삼성전자·SK하이닉스 24시간 실시간 가격</title>
+  <meta name="description" content="삼성전자와 SK하이닉스의 실시간 가격을 24시간 확인하세요. 국내 KRX 증시 가격(15~20분 지연)과 Binance·Hyperliquid의 24/7 선물 가격을 한눈에 비교할 수 있습니다.">
+  <meta name="keywords" content="삼성전자 주가, SK하이닉스 주가, 코스피 실시간, 한국 주식 24시간, 주식 선물, 바이낸스, 하이퍼리퀴드, KRX, 실시간 주가">
+  
+  <!-- Force Dark Theme Default -->
+  <script>document.documentElement.dataset.theme='dark'</script>
+  
+  <link rel="stylesheet" href="index.css">
+  
+  <!-- Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- ── Chart Modal ── -->
+<div id="chartModal" class="modal-overlay" style="display:none" onclick="onModalOverlayClick(event)">
+  <div class="modal-box chart-box">
+    <div class="modal-header">
+      <div class="modal-symbol-info-wrap">
+        <div class="modal-symbol-icon" id="modalIcon"></div>
+        <div class="modal-symbol-info">
+          <div class="modal-symbol-name" id="modalTitle">—</div>
+          <div class="modal-symbol-sub" id="modalSub">선물 차트</div>
+        </div>
+      </div>
+      <div class="modal-header-actions">
+        <div class="modal-tabs">
+          <button class="tab-btn active" onclick="setChartRange(7)">7D</button>
+          <button class="tab-btn" onclick="setChartRange(30)">30D</button>
+          <button class="tab-btn" onclick="setChartRange(90)">90D</button>
+        </div>
+        <button class="modal-close" onclick="closeChart()">✕</button>
+      </div>
+    </div>
+
+    <div class="modal-body">
+      <div class="chart-summary" id="chartSummary"></div>
+      <div class="chart-canvas-wrap">
+        <canvas id="chartCanvas"></canvas>
+        <div class="chart-tooltip" id="chartTooltip">
+          <div class="tt-date" id="ttDate"></div>
+          <div class="tt-row"><span class="tt-label">종가</span><span class="tt-val" id="ttClose"></span></div>
+          <div class="tt-row"><span class="tt-label">고가</span><span class="tt-val" id="ttHigh"></span></div>
+          <div class="tt-row"><span class="tt-label">저가</span><span class="tt-val" id="ttLow"></span></div>
+          <div class="tt-row"><span class="tt-label">거래량</span><span class="tt-val" id="ttVol"></span></div>
+        </div>
+        <div class="chart-loading" id="chartLoading">
+          <div class="spinner"></div>
+          <span>차트 데이터 불러오는 중...</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <div class="chart-source">데이터 출처: <span id="chartSourceSpan">Hyperliquid</span></div>
+      <div id="chartUpdateTime" class="update-time-text"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ── News Popup Modal ── -->
+<div id="newsModal" class="modal-overlay" style="display:none" onclick="onNewsOverlayClick(event)">
+  <div class="modal-box news-box">
+    <div class="modal-header">
+      <div class="modal-symbol-info-wrap">
+        <div class="news-modal-icon" id="newsModalIcon"></div>
+        <div class="modal-symbol-info">
+          <div class="news-modal-name" id="newsModalName">—</div>
+          <div class="news-modal-sub" id="newsModalSub">최신 뉴스</div>
+        </div>
+      </div>
+      <button class="modal-close" onclick="closeNews()">✕</button>
+    </div>
+    <div class="modal-body news-modal-body">
+      <div id="newsModalList">
+        <div class="news-modal-loading">
+          <div class="spinner"></div>
+          <span>뉴스 불러오는 중...</span>
+        </div>
+      </div>
+    </div>
+    <div class="news-modal-footer">
+      Google News 제공 · 5분마다 갱신
+    </div>
+  </div>
+</div>
+
+<!-- ── App Header ── -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-emoji">📈</div>
+      <span class="brand">한국주식<span class="brand-num">24</span></span>
+      <span id="headerExchangeRate" class="header-exchange-rate">환율: ₩1,350</span>
+    </div>
+    <div class="header-right">
+      <div class="live-badge">
+        <div class="live-dot"></div>
+        <span>LIVE</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="main">
+  <!-- Real-time KRX (Stock Market) Section -->
+  <div class="krx-section">
+    <div class="krx-header">
+      <div class="krx-title-wrap">
+        <span class="krx-flag">🇰🇷</span>
+        <h2>국내 증시 현황 (KRX)</h2>
+        <span class="krx-delay">(15~20분 지연)</span>
+      </div>
+      <div class="krx-status closed" id="krxStatus">
+        <div class="krx-status-dot"></div>
+        <span id="krxStatusText">장 마감</span>
+      </div>
+    </div>
+    <div class="krx-grid" id="krxGrid">
+      <div class="krx-loading"><div class="spinner"></div> 현물 데이터 조회 중...</div>
+    </div>
+  </div>
+
+  <!-- Futures Pricing (Binance vs Hyperliquid) Section -->
+  <div class="section-title-wrap">
+    <h2>해외 선물 가격 (24/7)</h2>
+    <div class="update-timer" id="lastUpdate">업데이트: 대기 중...</div>
+  </div>
+  
+  <!-- Cards Grid (Samsung, SK Hynix only) -->
+  <div class="cards-grid" id="cardsGrid">
+    <!-- Cards will be dynamically injected here -->
+  </div>
+
+  <!-- CoSPI News Section -->
+  <div class="news-section" id="newsSection">
+    <div class="news-section-header">
+      <div class="news-section-title">
+        <span class="news-icon">📰</span>
+        <h2>실시간 시장 주요 뉴스</h2>
+      </div>
+      <button class="news-refresh-btn" onclick="loadNews()">↻ 갱신</button>
+    </div>
+    <div class="news-grid" id="newsList">
+      <div class="news-loading"><div class="spinner"></div> 최신 뉴스 분석 중...</div>
+    </div>
+  </div>
+</main>
+
+
+
+<script src="app.js"></script>
+</body>
+</html>
