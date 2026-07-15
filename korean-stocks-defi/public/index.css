@@ -1,0 +1,1128 @@
+/* ==========================================================================
+   DESIGN SYSTEM & VARIABLES (Forced Dark Theme)
+   ========================================================================== */
+:root {
+  --font-sans: 'Outfit', 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Dark Theme Colors */
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-tertiary: #1f2937;
+  --border-color: #1f2937;
+  --text-primary: #f9fafb;
+  --text-secondary: #9ca3af;
+  --text-tertiary: #4b5563;
+  
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.5);
+  --shadow-md: 0 4px 20px -2px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 30px -4px rgba(0,0,0,0.5);
+
+  /* Status Colors */
+  --color-up-crypto: #10b981; /* Green for Crypto Up */
+  --color-down-crypto: #ef4444; /* Red for Crypto Down */
+  --color-up-krx: #ef4444; /* Red for Korean Stock Up */
+  --color-down-krx: #2563eb; /* Blue for Korean Stock Down */
+  
+  --color-neutral: #78716c;
+  --binance-brand: #f0b90b;
+  --hyperliquid-brand: #a855f7;
+  --transition-smooth: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   RESET & GLOBAL STYLES
+   ========================================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   APP HEADER (EXTRA NARROW FOR MOBILE)
+   ========================================================================== */
+header {
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0 10px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow-sm);
+}
+
+.header-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 40px; /* Reduced to 40px for extra narrow header */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  font-size: 14px; /* Slightly reduced */
+  letter-spacing: -0.03em;
+}
+
+.logo-emoji {
+  font-size: 15px;
+}
+
+.brand {
+  color: var(--text-primary);
+}
+
+.brand-num {
+  color: #3b82f6;
+}
+
+.header-exchange-rate {
+  font-size: 10px;
+  font-weight: 600;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  margin-left: 6px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  color: var(--color-up-crypto);
+  padding: 2px 8px;
+  border-radius: 9999px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.live-dot {
+  width: 5px;
+  height: 5px;
+  background-color: var(--color-up-crypto);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(0.9); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.4; }
+  100% { transform: scale(0.9); opacity: 1; }
+}
+
+/* ==========================================================================
+   MAIN CONTAINER
+   ========================================================================== */
+.main {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px 8px; /* Extra compact padding */
+}
+
+.highlight {
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   KRX DOMESTIC STOCK SECTION
+   ========================================================================== */
+.krx-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  margin-bottom: 14px;
+}
+
+.krx-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.krx-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.krx-flag {
+  font-size: 14px;
+}
+
+.krx-header h2 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.krx-delay {
+  font-size: 9px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.krx-status {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+}
+
+.krx-status.open {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.2);
+  color: var(--color-up-crypto);
+}
+
+.krx-status.closed {
+  background: var(--bg-primary);
+  border-color: var(--border-color);
+  color: var(--text-secondary);
+}
+
+.krx-status-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.krx-status.open .krx-status-dot {
+  background-color: var(--color-up-crypto);
+  animation: pulse 2s infinite;
+}
+
+.krx-status.closed .krx-status-dot {
+  background-color: var(--color-neutral);
+}
+
+.krx-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.krx-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.krx-item:last-child {
+  border-bottom: none;
+}
+
+.krx-item:hover {
+  background: var(--bg-tertiary);
+}
+
+.krx-item-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.krx-name {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.krx-ticker {
+  font-size: 9px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.krx-item-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+}
+
+.krx-price {
+  font-size: 13px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+
+.krx-price.up { color: var(--color-up-krx); }
+.krx-price.down { color: var(--color-down-krx); }
+
+.krx-change {
+  font-size: 10px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 3px;
+}
+
+.krx-change.up { color: var(--color-up-krx); }
+.krx-change.down { color: var(--color-down-krx); }
+.krx-change.flat { color: var(--text-secondary); }
+
+.krx-vol {
+  font-size: 8px;
+  color: var(--text-tertiary);
+  margin-top: 1px;
+}
+
+.krx-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 16px;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+/* ==========================================================================
+   FUTURES SECTION GENERAL STYLING
+   ========================================================================== */
+.section-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.section-title-wrap h2 {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.update-timer {
+  font-size: 9px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ==========================================================================
+   CARDS GRID (1 COLUMN MOBILE)
+   ========================================================================== */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 12px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-smooth);
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: 12px 12px 0 0;
+}
+
+/* Header */
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.card-symbol-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.card-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.card-icon img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.card-symbol {
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.card-name {
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+.card-badge-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.card-badge {
+  font-size: 8px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.15);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  letter-spacing: 0.05em;
+}
+
+.chart-icon-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.chart-icon-btn:hover {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+/* Sparkline Chart Container */
+.sparkline-wrap {
+  margin: 0 0 8px 0;
+  height: 44px;
+  position: relative;
+  cursor: pointer;
+  border-radius: 6px;
+  background: var(--bg-tertiary);
+  overflow: hidden;
+}
+
+.sparkline-wrap canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.sparkline-label {
+  position: absolute;
+  bottom: 2px;
+  right: 6px;
+  font-size: 8px;
+  color: var(--text-tertiary);
+  pointer-events: none;
+}
+
+/* Main Price */
+.main-price-wrap {
+  margin-bottom: 8px;
+}
+
+.main-price {
+  font-size: 22px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+.main-price.up { color: var(--color-up-crypto); }
+.main-price.down { color: var(--color-down-crypto); }
+
+.main-price-sub {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 1px;
+}
+
+.main-usd {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.change-badge {
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.change-badge.up { color: var(--color-up-crypto); }
+.change-badge.down { color: var(--color-down-crypto); }
+.change-badge.neutral { color: var(--text-secondary); }
+
+.price-source-label {
+  font-size: 9px;
+  color: var(--text-tertiary);
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.binance-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--binance-brand);
+}
+
+/* Exchange Compare Section (Binance vs HL Only) */
+.dex-compare {
+  background: var(--bg-tertiary);
+  border-radius: 6px;
+  border: 1px solid var(--border-color);
+  margin-bottom: 8px;
+  padding: 5px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.dex-source-label {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 8px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.dex-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+}
+
+.dex-price-val {
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.dex-chg {
+  font-size: 9px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dex-chg.up { color: var(--color-up-crypto); }
+.dex-chg.down { color: var(--color-down-crypto); }
+.dex-chg.neutral { color: var(--color-neutral); }
+
+.dex-divider {
+  width: 1px;
+  height: 18px;
+  background-color: var(--border-color);
+}
+
+/* Stats Row */
+.card-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  margin-bottom: 8px;
+  background: var(--bg-primary);
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 8px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stat-value {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Action Buttons (Full width on mobile) */
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 4px;
+}
+
+.trade-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 5px 2px;
+  border-radius: 5px;
+  color: #ffffff;
+  transition: var(--transition-smooth);
+}
+
+.trade-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.1);
+}
+
+.trade-btn.binance-btn {
+  background: linear-gradient(135deg, #f0b90b, #d49e00);
+  color: #000000;
+}
+
+.trade-btn.hl-btn {
+  background: linear-gradient(135deg, #8a2be2, #6a1b9a);
+}
+
+.trade-btn.news-btn {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+/* Flashing Animations */
+@keyframes flash-green {
+  0% { background-color: rgba(16, 185, 129, 0.15); }
+  100% { background-color: transparent; }
+}
+
+@keyframes flash-red {
+  0% { background-color: rgba(239, 68, 68, 0.15); }
+  100% { background-color: transparent; }
+}
+
+.card.flash-up { animation: flash-green 1s ease-out; }
+.card.flash-down { animation: flash-red 1s ease-out; }
+
+/* Delta Floating Text */
+@keyframes fly-up {
+  0% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-30px); }
+}
+
+.delta-popup {
+  position: absolute;
+  font-size: 10px;
+  font-weight: 700;
+  pointer-events: none;
+  animation: fly-up 1s ease-out forwards;
+}
+
+.delta-popup.up { color: var(--color-up-crypto); }
+.delta-popup.down { color: var(--color-down-crypto); }
+
+/* ==========================================================================
+   COSPIS NEWS SECTION (COMPACT ON MOBILE)
+   ========================================================================== */
+.news-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: var(--shadow-md);
+}
+
+.news-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.news-section-title {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.news-icon {
+  font-size: 14px;
+}
+
+.news-section-header h2 {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.news-refresh-btn {
+  font-size: 9px;
+  font-weight: 700;
+  color: #3b82f6;
+  padding: 1px 6px;
+  border-radius: 3px;
+  background: rgba(59, 130, 246, 0.1);
+  transition: var(--transition-smooth);
+}
+
+.news-refresh-btn:hover {
+  background: #3b82f6;
+  color: #ffffff;
+}
+
+.news-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.news-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  padding: 5px;
+  border-radius: 5px;
+  border-bottom: 1px solid var(--border-color);
+  transition: var(--transition-smooth);
+}
+
+.news-item:last-child {
+  border-bottom: none;
+}
+
+.news-item:hover {
+  background: var(--bg-primary);
+}
+
+.news-num {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  min-width: 12px;
+  text-align: center;
+}
+
+.news-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.news-headline {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.4;
+  margin-bottom: 2px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.news-item:hover .news-headline {
+  color: #3b82f6;
+}
+
+.news-meta {
+  font-size: 10px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.news-source {
+  color: #3b82f6;
+  font-weight: 600;
+}
+
+.news-time {
+  color: var(--text-tertiary);
+}
+
+.news-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 0;
+  color: var(--text-secondary);
+  font-size: 11px;
+}
+
+/* ==========================================================================
+   MODAL OVERLAY & BOXES
+   ========================================================================== */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end; /* Bottom sheet styling for mobile */
+  justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-box {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  width: 100%;
+  max-width: 600px;
+  border-radius: 12px 12px 0 0; /* Rounded top corners for bottom sheet */
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-lg);
+  animation: slideUp 0.25s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+  overflow: hidden;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.modal-header {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.modal-title {
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.modal-close {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-smooth);
+}
+
+.modal-close:hover {
+  background: var(--border-color);
+  color: var(--text-primary);
+}
+
+.modal-body {
+  padding: 12px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 8px 12px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+/* ==========================================================================
+   CHART MODAL DETAILED STYLING
+   ========================================================================== */
+.modal-symbol-info-wrap {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.modal-symbol-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+}
+
+.modal-symbol-name {
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.modal-symbol-sub {
+  font-size: 9px;
+  color: var(--text-secondary);
+}
+
+.modal-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.modal-tabs {
+  background: var(--bg-tertiary);
+  border-radius: 5px;
+  padding: 2px;
+  display: flex;
+  gap: 2px;
+}
+
+.modal-tabs .tab-btn {
+  font-size: 8px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  color: var(--text-secondary);
+}
+
+.modal-tabs .tab-btn.active {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Chart Canvas Wrapper */
+.chart-canvas-wrap {
+  height: 180px;
+  position: relative;
+  margin-top: 8px;
+}
+
+#chartCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.chart-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px;
+  background: var(--bg-primary);
+  padding: 6px;
+  border-radius: 6px;
+}
+
+.summary-val {
+  font-size: 10px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.summary-val.up { color: var(--color-up-crypto); }
+.summary-val.down { color: var(--color-down-crypto); }
+
+/* Chart Tooltip */
+.chart-tooltip {
+  position: absolute;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+  padding: 5px;
+  font-size: 8px;
+  box-shadow: var(--shadow-lg);
+  pointer-events: none;
+  z-index: 10;
+  display: none;
+}
+
+.tt-date {
+  font-weight: 700;
+  margin-bottom: 2px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 2px;
+}
+
+.tt-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tt-label {
+  color: var(--text-secondary);
+}
+
+.tt-val {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  font-size: 10px;
+  color: var(--text-secondary);
+}
+
+.update-time-text {
+  font-size: 8px;
+  color: var(--text-tertiary);
+}
+
+/* Spinner */
+.spinner {
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--border-color);
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+
+
+/* ==========================================================================
+   SKELETON ANIMATIONS
+   ========================================================================== */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-primary) 50%, var(--bg-tertiary) 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  color: transparent !important;
+  border-radius: 4px;
+}
+
+@keyframes loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN (DESKTOP ADJUSTMENTS)
+   ========================================================================== */
+@media (min-width: 640px) {
+  .modal-overlay {
+    align-items: center; /* Center sheet on desktop */
+  }
+  
+  .modal-box {
+    border-radius: 10px; /* Rounded top & bottom corners */
+    max-height: 90vh;
+  }
+  
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .krx-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .krx-item {
+    border-bottom: none;
+  }
+  
+  .krx-item:first-child {
+    border-right: 1px solid var(--border-color);
+  }
+}
